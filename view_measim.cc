@@ -47,7 +47,7 @@ int main(int argc, char ** argv, char ** envp)
 	view.set_system(sys);
 	gltk::Window * w;
 	view.sys_dashed.connect(sigc::ptr_fun(update_views));
-	view.set_title("View MEAsim");
+	view.set_title("View MEAsim2.0");
 
 	PotView pv(& vol);
 	w = new gltk::Window;
