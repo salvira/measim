@@ -83,7 +83,7 @@ int main(int argc, char ** argv, char ** envp)
 	w->add(trace);
 	trace.show();
 	w->set_default_size(800, 320);
-	w->set_title("trace of X, Y, Z and G");
+	w->set_title("trace of X, Y, Z and A");
 	w->show();
 	view.sys_dashed.connect(sigc::mem_fun(trace, &TraceView::add_record));
 	update_list.push_back(Update(w, 8.0));
