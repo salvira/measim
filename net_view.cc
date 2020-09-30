@@ -88,7 +88,7 @@ void NetView::on_draw()
 		double ex = dx / rr;
 		double ey = dy / rr;
 		MEAsim::Synapse const & sn = vol->get_synapse(i->l);
-		double s = sn.S;
+		double s = sn.A;
 		tts += s;
 		tty += sn.Y;
 		ttx += 1.0 - s - sn.Y - sn.Z;

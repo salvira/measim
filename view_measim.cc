@@ -6,6 +6,7 @@
 #include "net_view.hh"
 #include "view_misc.hh"
 #include "poly_view.hh"
+#include "trace_view.hh"
 #include "initia_win.hh"
 
 struct Update
@@ -75,6 +76,16 @@ int main(int argc, char ** argv, char ** envp)
 	w->set_default_size(800, 320);
 	w->set_title("firing polygram");
 	w->show();
+	update_list.push_back(Update(w, 8.0));
+
+	TraceView trace(& vol);
+	w = new gltk::Window;
+	w->add(trace);
+	trace.show();
+	w->set_default_size(800, 320);
+	w->set_title("trace of X, Y, Z and G");
+	w->show();
+	view.sys_dashed.connect(sigc::mem_fun(trace, &TraceView::add_record));
 	update_list.push_back(Update(w, 8.0));
 
 	// initia window

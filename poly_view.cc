@@ -16,7 +16,7 @@ void PolyView::on_draw()
 	glVertex2f(ww, hh / 2);
 	glEnd();
 
-	glColor3f(1, 0, 0);
+	glColor3f(0, 0, 0);
 	glBegin(GL_LINES);
 	for (std::deque<Event>::iterator i = events.begin(); i != events.end(); i ++) {
 		if (i->i >= sz) continue;
@@ -27,12 +27,13 @@ void PolyView::on_draw()
 	}
 	glEnd();
 
-	glColor3f(0.5, 0.5, 0);
+	glColor3f(1, 0, 0);
 	glBegin(GL_LINE_STRIP);
 	double tm = start; // window end
-	double wd = 5.0; // window size
+	double wd = 10.0; // window size
 	size_t np = 0; // points in window
 	double hs = 0.5 * hh / sz;
+       
 	std::deque<Event>::iterator b = events.begin();
 	std::deque<Event>::iterator c = b;
 	glVertex2f(0, hh);
@@ -166,21 +167,21 @@ void PolyView::file_ok()
 	std::string fn = fn_entry.get_text();
 	if (! fn.size()) return;
 	std::ofstream f(fn.c_str());
-	size_t sz = vol->get_nnum();
+       	size_t sz = vol->get_nnum();
 	double start = vol->get_age() - range;
 	f.precision(4);
 	f << std::fixed;
 	for (std::deque<Event>::iterator i = events.begin(); i != events.end(); i ++) {
 		if (i->i >= sz || i->time <= start) continue;
-		// f << i->time - start << '\t' << i->i << '\n';
-		f << i->time << '\t' << i->i << '\n';
+		 f << i->time - start << '\t' << i->i << '\n';
+		//f << i->time << '\t' << i->i << '\n';
 	}
 	fdlg->hide();
 }
 
 PolyView::PolyView(MEAsim * vr) :
 	vol(vr),
-	range(5000),
+	range(300000), // default 10000 = 10 sec
 	rdlg(0),
 	fdlg(0)
 {

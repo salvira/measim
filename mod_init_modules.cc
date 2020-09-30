@@ -85,7 +85,7 @@ mod_init::AddInhiNrn::AddInhiNrn():
 	InitModule("addinhinrn")
 {
 	using namespace prm::tag;
-	param.add_var("inhiratio", inhiratio = 0)
+	param.add_var("inhiratio", inhiratio = 0.2)
 		<< Name("inhiratio")
 		<< Desc("the percentage of inhibitory neurons in the network")
 		<< Range(0, 1)
@@ -221,7 +221,7 @@ mod_init::Spaced::Spaced() :
 	InitModule("spaced")
 {
 	using namespace prm::tag;
-	param.add_var("nnum", nnum = 64)
+	param.add_var("nnum", nnum = 100)
 		<< Name("nnum")
 		<< Desc("number of neurons")
 		<< Range(1, 4096)
@@ -780,10 +780,17 @@ bool mod_init::AxonSearch::iden_connection(double r, double l, double xs, double
 {
 	double lnn = sqrt(pow(xt-xs,2)+pow(yt-ys,2)); // distance between two neurons
 	double alpha1 = acos(((xt-xs)*vex+(yt-ys)*vey)/l/lnn);
-	if (alpha1 >= pi/2) return lnn < r;
-	if (lnn * sin(alpha1) > r) return false;
-	if (lnn * cos(alpha1) <= l) return true;
-	return sqrt(pow(lnn * cos(alpha1)-l,2)+pow(lnn * sin(alpha1),2)) < r;
+	if (alpha1 >= pi/2)
+	  if (lnn < r) return true;
+	  else return false;
+	else{
+	        if (lnn * sin(alpha1) > r) return false;
+	        else{
+	               if (lnn * cos(alpha1) <= l) return true;
+	               else if (sqrt(pow(lnn * cos(alpha1)-l,2)+pow(lnn * sin(alpha1),2)) < r) return true;
+	        }
+	}
+
 }
 
 void mod_init::AxonSearch::initialize(MEAsim * sys)
