@@ -50,7 +50,7 @@ public:
 	double get_y(size_t n) const;
 	double get_syny(size_t n) const;
 	double get_synz(size_t n) const;
-	double get_syns(size_t n) const;
+	double get_syna(size_t n) const;
 	size_t get_from(size_t l) const;
 	size_t get_to(size_t l) const;
 	sigc::signal<void, MEAsim *> setup; // Should be removed?

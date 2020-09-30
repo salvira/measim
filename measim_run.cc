@@ -305,7 +305,7 @@ double MEAsimRun::get_synz(size_t l) const
 {
 	return get_synapse(l).Z;
 }
-double MEAsimRun::get_syns(size_t l) const
+double MEAsimRun::get_syna(size_t l) const
 {
-	return get_synapse(l).S;
+	return get_synapse(l).A;
 }

@@ -28,19 +28,19 @@ void MEAsimDump::dash()
 	size_t sn = get_snum();
 	double aY = 0;
 	double aZ = 0;
-	double aS = 0;
+	double aA = 0;
 	for (size_t i = 0; i < sn; i ++) {
 		Synapse const & s = get_synapse(i);
 		aY += s.Y;
 		aZ += s.Z;
-		aS += s.S;
+		aA += s.A;
 	}
 	aY /= sn;
 	aZ /= sn;
-	aS /= sn;
+	aA /= sn;
 	std::cout << '\t' << aY;
 	std::cout << '\t' << aZ;
-	std::cout << '\t' << aS;
+	std::cout << '\t' << aA;
 
 	std::cout << '\n';
 }
@@ -48,7 +48,7 @@ void MEAsimDump::dash()
 MEAsimDump::MEAsimDump()
 {
 	description = "Dump average values of various variables:\n\n"
-		"\tage  V  W  Ca2_p  Y  Z  S";
+		"\tage  V  W  Ca2_p  Y  Z  A";
 	using namespace prm::tag;
 	param.add_var("resolution", resolution = 1)
 		<< Name("resolution")

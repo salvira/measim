@@ -39,10 +39,10 @@ class MEAsim :
 	double I_bgm;
 	double I_bgs;
 
-	double tau_d;
+	double tau_nu;
+	double tau_au;
 	double tau_r;
-	double tau_l;
-	double tau_s;
+	double tau_g;
 	double u_lower;
 	double u_upper;
 
@@ -57,6 +57,7 @@ class MEAsim :
 	double I_p;
 	double gamma;
 	double Ca2p_0;
+	double b;
 
 	double threshold; // firing criteria voltage threshold
 
@@ -78,7 +79,7 @@ public:
 	{
 		double Y;
 		double Z;
-		double S;
+		double A;
 	};
 protected:
 	size_t nnum;

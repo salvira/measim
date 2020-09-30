@@ -38,7 +38,7 @@ MEAsim::MEAsim() :
 		<< Step(0.01, 0.1)
 		<< Save()
 		<< CmdLine();
-	param.add_var("g_L", g_L = 0.5)
+	param.add_var("g_L", g_L = 0.46)
 		<< Name("g_L")
 		<< Desc("Leaking channel conductance (mS)")
 		<< Range(0, 8)
@@ -129,7 +129,7 @@ MEAsim::MEAsim() :
 		<< Step(0.1, 1)
 		<< Save()
 		<< CmdLine();
-	param.add_var("I_bgs", I_bgs = 1)
+	param.add_var("I_bgs", I_bgs = 0)
 		<< Name("I_bgs")
 		<< Desc("Standard deviation of background input current (uA)")
 		<< Range(0, 100)
@@ -138,42 +138,42 @@ MEAsim::MEAsim() :
 		<< CmdLine();
 	param.add_var("u_lower", u_lower = 0.2)
 		<< Name("u_lower")
-		<< Desc("Lower bound of the fraction of transmittre release upon action potential")
+		<< Desc("Lower bound of the fraction of transmitter release upon action potential")
 		<< Range(0, 1)
 		<< Step(0.01, 0.1)
 		<< Save()
 		<< CmdLine();
 	param.add_var("u_upper", u_upper = 0.2)
 		<< Name("u_upper")
-		<< Desc("Upper bound of the fraction of transmittre release upon action potential")
+		<< Desc("Upper bound of the fraction of transmitter release upon action potential")
 		<< Range(0, 1)
 		<< Step(0.01, 0.1)
 		<< Save()
 		<< CmdLine();
-	param.add_var("tau_d", tau_d = 10)
-		<< Name("tau_d")
-		<< Desc("Decay time of active transmitter (ms)")
-		<< Range(0, 50)
-		<< Step(1, 10)
+	param.add_var("tau_nu", tau_nu = 50)
+		<< Name("tau_nu")
+		<< Desc("Decay time of active transmitter by neuronal uptake(ms)")
+		<< Range(1, 500)
+		<< Step(5, 50)
 		<< Save()
 		<< CmdLine();
-	param.add_var("tau_r", tau_r = 300)
+	param.add_var("tau_au", tau_au = 250)
+		<< Name("tau_au")
+		<< Desc("Decay time of active transmitter by astrocytic uptake(ms)")
+		<< Range(10, 50000000)
+		<< Step(10, 1000)
+		<< Save()
+		<< CmdLine();
+	param.add_var("tau_r", tau_r = 600)
 		<< Name("tau_r")
-		<< Desc("Recovery time of inactive transmitter (ms)")
+		<< Desc("Recovery time of ready to release(ms)")
 		<< Range(10, 15000)
 		<< Step(10, 1000)
 		<< Save()
 		<< CmdLine();
-	param.add_var("tau_l", tau_l = 600)
-		<< Name("tau_l")
-		<< Desc("Leaking time to super-inactive state (ms)")
-		<< Range(10, 15000)
-		<< Step(10, 1000)
-		<< Save()
-		<< CmdLine();
-	param.add_var("tau_s", tau_s = 5000) // 5 s
-		<< Name("tau_s")
-		<< Desc("Recovery time of super-inactive transmitter (ms)")
+	param.add_var("tau_g", tau_g = 30000) // 5 s
+		<< Name("tau_g")
+		<< Desc("Recycle time from glia (ms)")
 		<< Range(1000, 50000)
 		<< Step(100, 1000)
 		<< Save()
@@ -234,7 +234,7 @@ MEAsim::MEAsim() :
 		<< Step(0.00001, 0.0001)
 		<< Save()
 		<< CmdLine();
-	param.add_var("gamma", gamma = 0.0330)
+	param.add_var("gamma", gamma = 0.0500)
 		<< Name("gamma")
 		<< Desc("Release constant for residual calcium")
 		<< Range(0, 10)
@@ -246,6 +246,13 @@ MEAsim::MEAsim() :
 		<< Desc("extra-synaptic calcium concentration (uM)")
 		<< Range(100, 20000)
 		<< Step(100, 1000)
+		<< Save()
+		<< CmdLine();
+	param.add_var("b", b = 0)
+		<< Name("b")
+		<< Desc("Postsynaptic saturation")
+		<< Range(0,50)
+		<< Step(0.01,1)
 		<< Save()
 		<< CmdLine();
 	param.add_var("threshold", threshold = 10)
@@ -332,11 +339,15 @@ MEAsim::MEAsim() :
 	ss->add_member("Z", & Synapse::Z)
 		<< Name("Z")
 		<< Desc("inactive transmitter fraction");
-	ss->add_member("S", & Synapse::S)
-		<< Name("S")
+	ss->add_member("A", & Synapse::A)
+		<< Name("A")
 		<< Desc("super-inactive transmitter fraction");
 	ss->set_resolver(* this, & MEAsim::res_syns);
 	syn.add_struct(ss);
+
+
+
+
 
 	ss = new prm::Struct;
 	ss->add_member("weight", & Link::weight)
@@ -398,11 +409,11 @@ void MEAsim::reset()
 
 	double Y_ss = 0;
 	double Z_ss = 0;
-	double S_ss = 0.8;
+	double A_ss = 0.7;
 	for (size_t i = 0; i < snum; i ++) {
 		syns[i].Y = Y_ss;
 		syns[i].Z = Z_ss;
-		syns[i].S = S_ss;
+		syns[i].A = A_ss;
 	}
 	make_auxiliary();
 }
@@ -489,12 +500,12 @@ void MEAsim::make_slope(Neuron * vn, Synapse * vs)
 	for (size_t i = 0; i < snum; i ++) {
 		Link & l = links[i];
 		if (range) {
-			if (l.syn_type == exci) exci_inp[l.to] += syns[i].Y * l.weight * exp(- l.distance / range);
-			else inhi_inp[l.to] += syns[i].Y * l.weight * exp(- l.distance / range);
+			if (l.syn_type == exci) exci_inp[l.to] += syns[i].Y * (1 - b*syns[i].Y) * l.weight * exp(- l.distance / range);
+			else inhi_inp[l.to] += syns[i].Y  * (1 - b*syns[i].Y) * l.weight * exp(- l.distance / range);
 		}
 		else {
-			if (l.syn_type == exci)	exci_inp[l.to] += syns[i].Y * l.weight;
-			else inhi_inp[l.to] += syns[i].Y * l.weight;
+			if (l.syn_type == exci)	exci_inp[l.to] += syns[i].Y * (1 - b*syns[i].Y) * l.weight;
+			else inhi_inp[l.to] += syns[i].Y * (1 - b*syns[i].Y) * l.weight;
 		}
 	}
 	for (size_t i = 0; i < nnum; i ++) {
@@ -513,9 +524,11 @@ void MEAsim::make_slope(Neuron * vn, Synapse * vs)
 	}
 	for (size_t i = 0; i < snum; i ++) {
 		Synapse & s = syns[i];
-		vs[i].Y = - s.Y / tau_d;
-		vs[i].Z = s.Y / tau_d - s.Z / tau_r - s.Z / tau_l;
-		vs[i].S = s.Z / tau_l - s.S / tau_s;
+		vs[i].Y = - s.Y / tau_nu - s.Y / tau_au;
+		vs[i].Z = s.Y / tau_nu - s.Z / tau_r + s.A / tau_g;
+		vs[i].A = s.Y / tau_au - s.A / tau_g;
+                //vs[i].Z = s.Y / tau_nu - s.Z / tau_r +  s.Y / tau_au;
+               // vs[i].A =s.Y / tau_au - s.Y / tau_au;
 	}
 	delete [] exci_inp;
 	delete [] inhi_inp;
@@ -541,14 +554,16 @@ void MEAsim::step_forward(double time, Neuron * vn, Synapse * vs, bool * fr)
 	for (size_t i = 0; i < snum; i ++) {
 		syns[i].Y += vs[i].Y * time;
 		syns[i].Z += vs[i].Z * time;
-		syns[i].S += vs[i].S * time;
+		syns[i].A += vs[i].A * time;
 		acc_rate[i] = teta;
 		teta += eta[links[i].from];
 	}
 	// synchronous release synapse
 	if (! syn_inh) for (size_t i = 0; i < snum; i ++) if (fr[links[i].from]) {
 		Synapse & s = syns[i];
-		s.Y += ((u_upper-u_lower)*rndu[links[i].from]+u_lower) * (1 - s.Y - s.Z - s.S);
+		s.Y += ((u_upper-u_lower)*rndu[links[i].from]+u_lower) * (1 - s.Y - s.Z - s.A);
+			
+               
 	}
 	// synchronous release calcium
 	for (size_t n = 0; n < nnum; n ++) if (fr[n]) {
@@ -571,7 +586,8 @@ void MEAsim::step_forward(double time, Neuron * vn, Synapse * vs, bool * fr)
 			else i = k;
 		}
 		Synapse & s = syns[i];
-		s.Y += xi_ave * (1 - s.Y - s.Z - s.S);
+		s.Y += xi_ave * (1 - s.Y - s.Z - s.A) ;
+		
 	}
 	delete [] eta;
 	delete [] acc_rate;
