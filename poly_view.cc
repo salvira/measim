@@ -181,7 +181,7 @@ void PolyView::file_ok()
 
 PolyView::PolyView(MEAsim * vr) :
 	vol(vr),
-	range(300000), // default 10000 = 10 sec
+	range(10000), 
 	rdlg(0),
 	fdlg(0)
 {

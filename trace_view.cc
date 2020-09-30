@@ -103,7 +103,7 @@ void TraceView::file_ok()
 	if (! fn.size()) return;
 	std::ofstream f(fn.c_str());
 	size_t sz = vol->get_nnum();
-	double start = vol->get_age() - 300000; // default 10000=10sec
+	double start = vol->get_age() - 10000;
 	f.precision(4);
 	f << std::fixed;
 	for (size_t i = 0; i<num_rec; i++) {
@@ -118,7 +118,7 @@ void TraceView::file_ok()
 
 TraceView::TraceView(MEAsim * vr) :
 	vol(vr),
-	num_rec(60000),
+	num_rec(2000),
 	buf_start(0),
         fdlg(0),
 	last_t(0),

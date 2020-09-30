@@ -171,7 +171,7 @@ MEAsim::MEAsim() :
 		<< Step(10, 1000)
 		<< Save()
 		<< CmdLine();
-	param.add_var("tau_g", tau_g = 30000) // 5 s
+	param.add_var("tau_g", tau_g = 10000) 
 		<< Name("tau_g")
 		<< Desc("Recycle time from glia (ms)")
 		<< Range(1000, 50000)

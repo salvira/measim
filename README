@@ -1,9 +1,9 @@
 measim (TUMA)
 ======
-Simulation of two-dimensional cultured neuronal network connected through a tripartite synapse
+Simulation of two-dimensional cultured neuronal network connected through a tripartite synapse (TUMA model)
 
 For details on installation, please see the instructions provided in the git repository at:
 
-	https://github.com/chnchg/measim
+	https://github.com/salvira/measim2.0
 
 
