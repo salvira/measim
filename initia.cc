@@ -18,9 +18,9 @@ InitModule::InitModule(std::string const & id) :
 Initia::Initia() :
 	active(0)
 {
-	mlist.push_back(new mod_init::MoritaSong);
-	mlist.push_back(new mod_init::Minimal);
 	mlist.push_back(new mod_init::Random);
+        mlist.push_back(new mod_init::MoritaSong);
+	mlist.push_back(new mod_init::Minimal);
 	mlist.push_back(new mod_init::SongSmallWorld);
 	mlist.push_back(new mod_init::Lattice);
 	mlist.push_back(new mod_init::AdjFile);
