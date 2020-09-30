@@ -24,6 +24,7 @@ if HAVE_GLUT
 noinst_LIBRARIES += libgui.a
 libgui_a_SOURCES = \
 	pot_view.cc pot_view.hh net_view.cc net_view.hh \
+	trace_view.cc trace_view.hh \
 	view_misc.cc view_misc.hh poly_view.cc poly_view.hh \
 	initia_win.cc initia_win.hh
 
