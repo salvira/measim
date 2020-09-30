@@ -1,7 +1,8 @@
 # measim2.0
-*Simulation of two-dimensional cultured neuronal network with an astrcytic component*
+*Simulation of two-dimensional cultured neuronal network with an astrocytic component*
 
-This code implements a neuronal, electrophysiological model by [Volman et al](http://dx.doi.org/10.1088/1478-3975/4/2/003), which consists of [Morris--Lecar](https://dx.doi.org/10.1016%2FS0006-3495(81)84782-0) neurons and extended [Tsodyks--Markram](http://www.pnas.org/content/94/2/719) synapses, on a 2D network to simulate a system of dissociated cultured neurons on a multi-electrode array. Please see the manuscript [arXiv:1610.05717](https://arxiv.org/abs/1610.05717) for details of the model and the corresonding experiments. Supplementary files of the manuscript can be found in the [pub1](pub1/) subdirectory of the git repository. Earlier studies employing the code include: [arXiv:1402.1959](https://arxiv.org/abs/1402.1959)
+This code implements a neuronal, electrophysiological model by [Volman et al](http://dx.doi.org/10.1088/1478-3975/4/2/003), which consists of [Morris--Lecar](https://dx.doi.org/10.1016%2FS0006-3495(81)84782-0) neurons and extended [Tsodyks--Markram](http://www.pnas.org/content/94/2/719) synapses as TUMA tripartite synapses, on a 2D network to simulate a system of dissociated cultured neurons with astrocytes on a multi-electrode array. Please see the manuscript [Kumar et al](https://doi.org/10.1093/texcom/tgaa053) for details of the model and the corresonding experiments. Earlier studies employing the code include: [Huang et al](https://link.springer.com/article/10.1007/s10827-016-0634-4) 
+[arXiv:1402.1959](https://arxiv.org/abs/1402.1959)
 
 ## Prerequite libraries (Debian packages, recommanded verion)
 Building from source package: HDF5 (libhdf5-dev, >=1.8.16)  
