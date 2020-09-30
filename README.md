@@ -12,7 +12,7 @@ Building from git checkout: autoconf (>=2.69), autoconf-archive (20160916), auto
 ## Build from git
 The build system of measim is based on GNU autotools. First check out the source tree and submodules from github:
 
-    $ git clone https://github.com/chnchg/measim
+    $ git clone https://github.com/salvira/measim2.0
     $ cd measim
     $ git submodule init
     $ git submodule update
