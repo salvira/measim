@@ -1,5 +1,5 @@
 measim2.0
-======
+=========
 Simulation of two-dimensional cultured neuronal network connected through a tripartite synapse (TUMA model)
 For details on model description, please see the article at:
 
@@ -9,4 +9,7 @@ For details on installation, please see the instructions provided in the git rep
 
 	https://github.com/salvira/measim2.0
 
+The codes for the equations describing neuronal and synaptic dynamics can be accessed from the file;
+       
+        measim.cc
 
